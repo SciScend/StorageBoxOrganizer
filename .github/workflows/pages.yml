@@ -1,7 +1,7 @@
 name: Landing page
 
 # Publishes site/ — the static, bilingual landing page for non-technical users —
-# to GitHub Pages at https://nemsys.github.io/StorageBoxOrganizer/.
+# to GitHub Pages at https://sciscend.github.io/StorageBoxOrganizer/.
 # It is independent of the app: no build step, no Firebase, and it runs only
 # when something under site/ changes, so app pushes never redeploy it.
 # The download buttons ask the GitHub API for the newest Release's APK at
