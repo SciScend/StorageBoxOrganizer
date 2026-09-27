@@ -24,7 +24,7 @@ A clean, cloud-synced web app for cataloguing your physical storage boxes and th
 
 The app is deployed on Firebase Hosting. Sign in with your Google account or email to get started.
 
-**New here?** The [landing page](https://nemsys.github.io/StorageBoxOrganizer/)
+**New here?** The [landing page](https://sciscend.github.io/StorageBoxOrganizer/)
 (Bulgarian, with English) explains what the app does, how to install it and how
 to get access, in plain words for non-technical people. Its source is the static
 `site/` folder, published to GitHub Pages by `.github/workflows/pages.yml` on any
@@ -43,7 +43,7 @@ address bar, and a service worker keeps it opening offline after the first
 visit. Nothing to download, works on both platforms.
 
 **From the APK (Android only).** Grab `storage-box-organizer-<version>.apk` from
-the [Releases page](https://github.com/nemsys/StorageBoxOrganizer/releases) and
+the [Releases page](https://github.com/SciScend/StorageBoxOrganizer/releases) and
 open it on the phone; Android will ask you to allow installing from that source
 once. The APK adds what the browser cannot give a web page: the device camera
 with its own capture UI, the hardware back button wired into navigation, and a
@@ -444,7 +444,7 @@ that need a human, collected in one place so none of them is discovered late.
       storage, a USB key in a drawer. Any two of those.
 - [ ] **Install the APK on the phone once and open it**, so the signed build is
       known to work before a release depends on it. The
-      [Releases page](https://github.com/nemsys/StorageBoxOrganizer/releases)
+      [Releases page](https://github.com/SciScend/StorageBoxOrganizer/releases)
       has the file; Android asks once for permission to install from that source.
 
 ### After every merge to `main`
