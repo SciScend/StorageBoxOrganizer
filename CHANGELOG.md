@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.0](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.20.0...v1.21.0) (2026-09-29)
+
+
+### Features
+
+* search boxes by typing in the item box field ([#72](https://github.com/SciScend/StorageBoxOrganizer/issues/72)) ([f731bc2](https://github.com/SciScend/StorageBoxOrganizer/commit/f731bc263da7bffcd2f4c1a2ea45cd727f807ea5))
+
 ## [1.20.0](https://github.com/nemsys/StorageBoxOrganizer/compare/v1.19.0...v1.20.0) (2026-09-23)
 
 
