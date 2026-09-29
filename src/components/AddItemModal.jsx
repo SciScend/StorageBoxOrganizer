@@ -4,6 +4,7 @@ import { Modal } from './Modal';
 import { CameraCaptureModal } from './CameraCaptureModal';
 import { FullscreenImageModal } from './FullscreenImageModal';
 import { TagInput } from './TagInput';
+import { BoxPicker } from './BoxPicker';
 import { Upload, Trash2, Search, Camera, Package, X, Check } from 'lucide-react';
 import { makeDerivatives, refsToThumbs, getImageRefs } from '../utils/imageUtils';
 import { useModalDraft, clearDraft } from '../utils/draftStorage';
@@ -239,21 +240,7 @@ export function AddItemModal({ isOpen, onClose, onAdd, boxes = [], initialBoxId 
                         />
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-muted mb-1">{t('box.label')}</label>
-                        <select
-                            value={selectedBoxId}
-                            onChange={(e) => setSelectedBoxId(e.target.value)}
-                            className="input"
-                        >
-                            <option value="">{t('box.unassignedOption')}</option>
-                            {boxes.map(box => (
-                                <option key={box.id} value={box.id}>
-                                    {box.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    <BoxPicker value={selectedBoxId} onChange={setSelectedBoxId} boxes={boxes} />
 
                     <div>
                         <label className="block text-sm font-medium text-muted mb-1">{t('common.description')}</label>

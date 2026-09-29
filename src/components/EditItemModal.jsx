@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Modal } from './Modal';
 import { TagInput } from './TagInput';
+import { BoxPicker } from './BoxPicker';
 import { CameraCaptureModal } from './CameraCaptureModal';
 import { FullscreenImageModal } from './FullscreenImageModal';
 import { usePhotoCapture } from '../native/usePhotoCapture';
@@ -132,21 +133,7 @@ export function EditItemModal({ isOpen, onClose, onSave, item, boxes = [], avail
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-muted mb-1">{t('box.label')}</label>
-                    <select
-                        value={selectedBoxId}
-                        onChange={(e) => setSelectedBoxId(e.target.value)}
-                        className="input"
-                    >
-                        <option value="">{t('box.unassignedOption')}</option>
-                        {boxes.map(box => (
-                            <option key={box.id} value={box.id}>
-                                {box.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <BoxPicker value={selectedBoxId} onChange={setSelectedBoxId} boxes={boxes} />
 
                 <div>
                     <label className="block text-sm font-medium text-muted mb-1">{t('common.description')}</label>
