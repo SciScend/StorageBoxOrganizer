@@ -143,9 +143,9 @@ The box menu (the three dots in the box's header) has:
 - **Export** - **Settings > Export Data** downloads a `.json` file with all boxes,
   items and their photos.
 - **Import** - **Settings > Import Data**. Select your `.json` backup; a progress
-  modal tracks the restore. Importing your own backup again updates the existing
-  entries instead of adding copies; importing it into another account creates
-  new ones there.
+  modal tracks the restore. Boxes and items already in your account are replaced
+  by their version in the backup and the rest are added, so importing the same
+  backup twice never creates copies.
 
 ---
 
@@ -273,7 +273,7 @@ An unapproved account gets an "Access not approved yet" screen showing its email
 | `npm run translations:check` | Verify `en`/`bg` string files agree with each other and with the code |
 | `npm run test:rules` | Run the Firestore security-rules tests against the emulator (needs Java) |
 | `npm run access` | List / grant / revoke account approval (requires service account) |
-| `npm run backup` | Dump the `boxes` and `items` collections to `.backups/` (requires service account) |
+| `npm run backup` | Dump the `boxes`, `items` and `images` collections to `.backups/` (requires service account) |
 | `npm run import -- <file> [uid]` | Import a backup JSON into Firestore, optionally under another user (requires service account) |
 | `npm run cap:sync` | Build the web app and copy it into the Android project |
 | `npm run android:open` | Open the Android project in Android Studio |
@@ -358,16 +358,12 @@ The scripts in `scripts/` use the **Firebase Admin SDK** and require a service a
 2. Save the JSON file to `.secrets/`. That is all — `scripts/lib/admin.js` picks up the first `*.json` it finds there, or the file `$GOOGLE_APPLICATION_CREDENTIALS` points at.
 
 ```bash
-# Back up the boxes and items of every account
+# Back up the boxes, items and photos of every account
 npm run backup
 
 # Import from a specific backup file (optionally re-owned by another UID)
 npm run import -- .backups/firestore-backup-<timestamp>.json [uid]
 ```
-
-`npm run backup` dumps the `boxes` and `items` collections only, not `images`,
-so it keeps the thumbnails but none of the full-size photos. For a backup with
-full photos, use **Settings > Export Data** in the app.
 
 > `.secrets/` and `.backups/` are git-ignored. Never commit service account keys — unlike the web config above, these *are* real credentials, and they grant full admin access to the project.
 

@@ -66,7 +66,7 @@ async function deleteUserData() {
         console.log(`****************************************************`);
         console.log(`* Target User:  ${targetEmail}`);
         console.log(`* Target UID:   ${targetUid}`);
-        console.log(`* Collections:  boxes, items`);
+        console.log(`* Collections:  boxes, items, images`);
         console.log(`****************************************************`);
         
         const confirm = await question(`\nTo confirm deletion of ALL data for this user, type "DELETE": `);
@@ -78,7 +78,8 @@ async function deleteUserData() {
 
         console.log('\nStarting deletion process...');
 
-        const collections = ['boxes', 'items'];
+        // `images` holds the full-size photos; leaving it out orphans them.
+        const collections = ['boxes', 'items', 'images'];
         
         for (const collectionName of collections) {
             const snapshot = await db.collection(collectionName).where('userId', '==', targetUid).get();
@@ -90,12 +91,13 @@ async function deleteUserData() {
 
             console.log(`- ${collectionName.padEnd(6)}: Deleting ${snapshot.size} documents...`);
             
-            const batch = db.batch();
-            snapshot.forEach(doc => {
-                batch.delete(doc.ref);
-            });
-            
-            await batch.commit();
+            // A batch takes at most 500 writes, and a user can have more photos than that.
+            const docs = snapshot.docs;
+            for (let i = 0; i < docs.length; i += 400) {
+                const batch = db.batch();
+                docs.slice(i, i + 400).forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+            }
             console.log(`  Done.`);
         }
 

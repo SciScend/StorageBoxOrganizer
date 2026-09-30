@@ -17,7 +17,8 @@ async function runBackup() {
     console.log('Starting Firestore backup using Firebase Admin SDK...');
 
     try {
-        const collections = ['boxes', 'items'];
+        // `images` holds the full-size photos; boxes and items carry only thumbnails.
+        const collections = ['boxes', 'items', 'images'];
         const backupData = {};
 
         for (const collectionName of collections) {
