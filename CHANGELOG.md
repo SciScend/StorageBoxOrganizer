@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.1](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.0...v1.21.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* correct the box delete and import prompts, and back up full-size photos ([#74](https://github.com/SciScend/StorageBoxOrganizer/issues/74)) ([af6c633](https://github.com/SciScend/StorageBoxOrganizer/commit/af6c6335b2182af2e6140e409469d02eab002831))
+
 ## [1.21.0](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.20.0...v1.21.0) (2026-09-29)
 
 
