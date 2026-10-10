@@ -35,7 +35,7 @@ const DOUBLE_TAP_SLOP_PX = 40;
 export function FullscreenImageModal({ isOpen, onClose, imageRefs = [], itemName, startIndex = 0, onDelete }) {
     const { t } = useTranslation();
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [fullMap, setFullMap] = useState({}); // index -> resolved full data URL
+    const [fullById, setFullById] = useState({}); // image id -> resolved full data URL
     const [loading, setLoading] = useState(false);
     const [zoom, setZoom] = useState({ scale: 1, x: 0, y: 0 });
     // True while a pinch or a pan is in flight: the transform must follow the
@@ -114,12 +114,18 @@ export function FullscreenImageModal({ isOpen, onClose, imageRefs = [], itemName
         setCurrentIndex((prev) => (prev === refs.length - 1 ? 0 : prev + 1));
     }, [refs.length, resetZoom]);
 
-    // Reset state on open (start on the requested slide)
+    // Reset state on open (start on the requested slide). The fetched photos
+    // are dropped on close, not on open: the fetch below runs in the same
+    // commit as this effect and still sees the previous opening's map, so
+    // clearing it here made every other photo skip its fetch and stay a
+    // thumbnail.
     useEffect(() => {
         if (isOpen) {
             setCurrentIndex(Math.min(Math.max(startIndex, 0), Math.max(refs.length - 1, 0)));
-            setFullMap({});
             resetZoom();
+        } else {
+            setFullById({});
+            setLoading(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, startIndex]);
@@ -136,32 +142,30 @@ export function FullscreenImageModal({ isOpen, onClose, imageRefs = [], itemName
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, refs.length]);
 
-    // Resolve the full-resolution image for the current slide on demand.
+    // Resolve the full-resolution image for the current slide on demand. Kept
+    // by image id, not slide index: after a delete the same index is another
+    // photo.
+    const currentId = refs[currentIndex]?.id;
     useEffect(() => {
         if (!isOpen) return;
         const ref = refs[currentIndex];
-        if (!ref) return;
-        if (fullMap[currentIndex]) return; // already resolved
-
-        // Legacy/import refs carry the full inline — use directly.
-        if (ref.full) {
-            setFullMap((m) => ({ ...m, [currentIndex]: ref.full }));
-            return;
-        }
-        if (!ref.id) return; // nothing to fetch; thumb stays
+        // Legacy/import refs carry the full inline; without an id there is
+        // nothing to fetch and the thumb stays.
+        if (!ref || ref.full || !ref.id) return;
+        if (fullById[ref.id]) return; // already resolved
 
         let cancelled = false;
         setLoading(true);
         firebaseStorage.getFullImage(ref.id)
             .then((full) => {
                 if (cancelled) return;
-                if (full) setFullMap((m) => ({ ...m, [currentIndex]: full }));
+                if (full) setFullById((m) => ({ ...m, [ref.id]: full }));
             })
             .finally(() => { if (!cancelled) setLoading(false); });
 
         return () => { cancelled = true; };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen, currentIndex, refs.length]);
+    }, [isOpen, currentId]);
 
     // Keyboard navigation
     useEffect(() => {
@@ -265,8 +269,9 @@ export function FullscreenImageModal({ isOpen, onClose, imageRefs = [], itemName
     if (!isOpen || refs.length === 0) return null;
 
     const currentRef = refs[currentIndex] || {};
-    const currentSrc = fullMap[currentIndex] || currentRef.thumb;
-    const showSpinner = loading && !fullMap[currentIndex];
+    const fullSrc = currentRef.full || fullById[currentRef.id];
+    const currentSrc = fullSrc || currentRef.thumb;
+    const showSpinner = loading && !fullSrc;
 
     return createPortal(
         <div
