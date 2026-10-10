@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.21.2](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.1...v1.21.2) (2026-10-10)
+
+
+### Bug Fixes
+
+* full-size photo stayed a thumbnail on every other fullscreen open ([#76](https://github.com/SciScend/StorageBoxOrganizer/issues/76)) ([1279053](https://github.com/SciScend/StorageBoxOrganizer/commit/127905382c95891ece42eda8601054b1c043757c))
+
 ## [1.21.1](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.0...v1.21.1) (2026-09-30)
 
 
