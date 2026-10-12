@@ -37,8 +37,8 @@ address and a password; it can see nothing until the owner approves it (see
 **New here?** The [landing page](https://sciscend.github.io/StorageBoxOrganizer/)
 (Bulgarian, with English) explains what the app does, how to install it and how
 to get access, in plain words for non-technical people. Its source is the static
-`site/` folder, published to GitHub Pages by `.github/workflows/pages.yml` on any
-change under `site/`; it has no build step and nothing to do with the Firebase
+`landing/` folder, published to GitHub Pages by `.github/workflows/pages.yml` on any
+change under `landing/`; it has no build step and nothing to do with the Firebase
 deploy.
 
 ### Installing it on a phone
