@@ -6,7 +6,7 @@ import { useTranslation } from '../translations';
 const AUTHOR = 'SciScend';
 const AUTHOR_URL = 'https://sciscend.com/';
 const CONTACT_EMAIL = 'ivapopova@sciscend.com';
-// The public landing page (site/): what the app does, install steps, how to get access.
+// The public landing page (landing/): what the app does, install steps, how to get access.
 const SITE_URL = 'https://sciscend.github.io/StorageBoxOrganizer/';
 
 /**
