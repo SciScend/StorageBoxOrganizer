@@ -15,6 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="SciScend">
 <link rel="canonical" href="https://sciscend.github.io/StorageBoxOrganizer/">
+<script>try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch { /* private mode */ }</script>
 <link rel="author" href="https://sciscend.com/">
 <script type="application/ld+json">
 {
@@ -86,6 +87,24 @@
     --shadow-lg: 0 40px 80px -24px rgba(0, 0, 0, .8), 0 12px 24px -12px rgba(0, 0, 0, .5);
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1120;
+  --bg-2: #0f1729;
+  --surface: #121b2e;
+  --ink: #eef2f8;
+  --ink-2: #cbd5e1;
+  --muted: #94a3b8;
+  --line: rgba(255, 255, 255, .08);
+  --accent: #38bdf8;
+  --accent-bright: #7dd3fc;
+  --accent-soft: rgba(56, 189, 248, .12);
+  --kraft: #d6ad80;
+  --kraft-soft: #231c14;
+  --on-accent: #06243a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -12px rgba(0, 0, 0, .6);
+  --shadow-lg: 0 40px 80px -24px rgba(0, 0, 0, .8), 0 12px 24px -12px rgba(0, 0, 0, .5);
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -170,6 +189,15 @@ h3 { font-size: 1.2rem; letter-spacing: -.01em; line-height: 1.25; font-weight: 
   padding: 8px 11px; border-radius: 999px; cursor: pointer; min-width: 40px;
 }
 .lang button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+/* Theme button: follows the system until pressed; shows the theme it switches to. */
+.theme {
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; padding: 0; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); font: inherit;
+}
+.theme > span { display: grid; }
+.theme svg.i { width: 18px; height: 18px; }
+.theme[data-mode="dark"] .moon, .theme:not([data-mode="dark"]) .sun, .no-js .theme { display: none; }
+@media (hover: hover) { .theme:hover { color: var(--ink); background: var(--accent-soft); } }
 @media (max-width: 900px) { .nav { display: none; } .lang { margin-left: auto; } }
 @media (max-width: 480px) { .header .btn { display: none; } }
 
@@ -435,6 +463,8 @@ h3 { font-size: 1.2rem; letter-spacing: -.01em; line-height: 1.25; font-weight: 
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
 </svg>
 
 <header class="header" id="top">
@@ -454,6 +484,7 @@ h3 { font-size: 1.2rem; letter-spacing: -.01em; line-height: 1.25; font-weight: 
       <button type="button" data-lang="bg" aria-pressed="true">БГ</button>
       <button type="button" data-lang="en" aria-pressed="false">EN</button>
     </div>
+    <button class="theme" type="button" aria-label="Светла тема"><span class="moon"><svg class="i"><use href="#i-moon"/></svg></span><span class="sun"><svg class="i"><use href="#i-sun"/></svg></span></button>
     <a class="btn btn-primary btn-small" href="#install" data-i18n="nav.cta">Започни</a>
   </div>
 </header>
@@ -859,7 +890,32 @@ h3 { font-size: 1.2rem; letter-spacing: -.01em; line-height: 1.25; font-weight: 
     for (const b of document.querySelectorAll('[data-lang]')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
     const m = MAIL_TEXT[lang];
     for (const a of document.querySelectorAll('[data-mail]')) a.href = `mailto:${MAIL}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+    showTheme();
   }
+
+  // Theme: the system setting until the button is pressed. A choice that matches
+  // the system again is forgotten, so the page follows the system from then on.
+  const root = document.documentElement;
+  const themeBtn = document.querySelector('.theme');
+  const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+  const THEME_LABEL = { bg: { light: 'Светла тема', dark: 'Тъмна тема' }, en: { light: 'Light theme', dark: 'Dark theme' } };
+  const system = () => (darkQuery.matches ? 'dark' : 'light');
+  const currentTheme = () => root.dataset.theme || system();
+  function showTheme() {
+    const dark = currentTheme() === 'dark';
+    themeBtn.dataset.mode = dark ? 'dark' : 'light';
+    themeBtn.setAttribute('aria-label', THEME_LABEL[lang][dark ? 'light' : 'dark']);
+    themeBtn.title = themeBtn.getAttribute('aria-label');
+    const bg = getComputedStyle(document.body).backgroundColor;
+    for (const meta of document.querySelectorAll('meta[name="theme-color"]')) meta.content = bg;
+  }
+  themeBtn.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    if (next === system()) { delete root.dataset.theme; try { localStorage.removeItem('theme'); } catch { /* private mode */ } }
+    else { root.dataset.theme = next; store.set('theme', next); }
+    showTheme();
+  });
+  darkQuery.addEventListener('change', showTheme);
 
   const fromUrl = new URLSearchParams(location.search).get('lang');
   applyLang(fromUrl || store.get('lang') || 'bg');
