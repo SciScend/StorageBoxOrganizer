@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.0](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.2...v1.22.0) (2026-10-18)
+
+
+### Features
+
+* show existing look-alike boxes and items while naming a new one ([#80](https://github.com/SciScend/StorageBoxOrganizer/issues/80)) ([6382c7e](https://github.com/SciScend/StorageBoxOrganizer/commit/6382c7eb27957f38d5d95a147b64e5514e5fa3fc))
+
 ## [1.21.2](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.1...v1.21.2) (2026-10-10)
 
 
