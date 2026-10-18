@@ -2127,6 +2127,8 @@ function App() {
         askConfirm={askConfirm}
         knownLocations={knownLocations}
         availableTags={tagSuggestions}
+        boxes={boxes}
+        onOpenExisting={handleBoxClick}
       />
 
       <AddItemModal
@@ -2138,6 +2140,7 @@ function App() {
         availableItems={allItems}
         availableTags={tagSuggestions}
         onSelectExisting={handleSelectExistingItem}
+        onOpenExisting={handleEditItem}
         askConfirm={askConfirm}
       />
 

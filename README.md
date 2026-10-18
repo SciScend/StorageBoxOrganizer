@@ -8,6 +8,7 @@ A clean, cloud-synced web app for cataloguing your physical storage boxes and th
 
 - **Box & Item Catalog** - Create boxes with a name, location, description, tags and photos, and add items to them
 - **Photos** - Attach several photos to any box or item, taken with the in-app camera or picked from the gallery; open them fullscreen with pinch and double-tap zoom
+- **No Accidental Duplicates** - While you type the name of a new box or item, existing ones with a similar name (typos included) are listed under the field; tap one to open it instead of creating it again
 - **Box Locations** - Record where each box physically is ("attic, shelf 2"); earlier locations are offered as you type
 - **Fuzzy Search** - Find items by name, description or tag, powered by [Fuse.js](https://www.fusejs.io/). Searching the box list also looks at locations and inside the boxes, and says which item matched
 - **Tagging System** - Boxes and items share one tag vocabulary; rename, merge or delete a tag everywhere from a central manager
@@ -74,6 +75,12 @@ over it.
    first box.
 3. Give it a name and, optionally, a location, a description, tags and photos.
 4. Open the box and tap **+** again to start cataloguing its contents.
+
+While you type a name, boxes or items you already have with a similar name are
+listed under the field. Tap one (or reach it with the arrow keys and press
+Enter) to open it instead: a box opens, an item opens in its edit form, where it
+can be moved to another box. The list is only a reminder; **Create Box** and
+**Add Item** still create a new one.
 
 ### Navigating
 

@@ -5,6 +5,7 @@ import { CameraCaptureModal } from './CameraCaptureModal';
 import { FullscreenImageModal } from './FullscreenImageModal';
 import { TagInput } from './TagInput';
 import { BoxPicker } from './BoxPicker';
+import { NameInputWithMatches } from './NameInputWithMatches';
 import { Upload, Trash2, Search, Camera, Package, X, Check } from 'lucide-react';
 import { makeDerivatives, refsToThumbs, getImageRefs } from '../utils/imageUtils';
 import { useModalDraft, clearDraft } from '../utils/draftStorage';
@@ -12,7 +13,7 @@ import { usePhotoCapture } from '../native/usePhotoCapture';
 import { useTranslation } from '../translations';
 import { parseTagInput } from '../utils/tagUtils';
 
-export function AddItemModal({ isOpen, onClose, onAdd, boxes = [], initialBoxId = '', availableItems = [], availableTags = [], onSelectExisting, askConfirm }) {
+export function AddItemModal({ isOpen, onClose, onAdd, boxes = [], initialBoxId = '', availableItems = [], availableTags = [], onSelectExisting, onOpenExisting, askConfirm }) {
     const { t, lang } = useTranslation();
     const [mode, setMode] = useState('create'); // 'create' | 'select'
     const [name, setName] = useState('');
@@ -64,6 +65,13 @@ export function AddItemModal({ isOpen, onClose, onAdd, boxes = [], initialBoxId 
     const handleClose = () => {
         clearDraft(draftKey);
         if (typeof onClose === 'function') onClose();
+    };
+
+    // The thing being typed already exists: open it (where it can also be
+    // moved to this box) instead of filing a second one.
+    const handleOpenExisting = (item) => {
+        handleClose();
+        if (typeof onOpenExisting === 'function') onOpenExisting(item);
     };
 
     // Filter items that can be selected (exclude items already in current box)
@@ -228,17 +236,21 @@ export function AddItemModal({ isOpen, onClose, onAdd, boxes = [], initialBoxId 
             {/* Create New Mode */}
             {mode === 'create' && (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-muted mb-1">{t('common.name')}</label>
-                        <input
-                            type="text"
-                            required
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            className="input"
-                            placeholder={t('item.namePlaceholder')}
-                        />
-                    </div>
+                    <NameInputWithMatches
+                        label={t('common.name')}
+                        value={name}
+                        onChange={setName}
+                        placeholder={t('item.namePlaceholder')}
+                        candidates={availableItems}
+                        heading={(count) => t('item.existingMatches', { count })}
+                        renderLabel={(item) => (
+                            <>
+                                <span className="block text-sm font-medium text-content truncate">{item.name}</span>
+                                <span className="block text-xs text-muted truncate">{getBoxName(item.boxId)}</span>
+                            </>
+                        )}
+                        onPick={handleOpenExisting}
+                    />
 
                     <BoxPicker value={selectedBoxId} onChange={setSelectedBoxId} boxes={boxes} />
 
