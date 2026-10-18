@@ -9,9 +9,10 @@ import { usePhotoCapture } from '../native/usePhotoCapture';
 import { useTranslation } from '../translations';
 import { LocationInput } from './LocationInput';
 import { TagInput } from './TagInput';
+import { NameInputWithMatches } from './NameInputWithMatches';
 import { parseTagInput } from '../utils/tagUtils';
 
-export function AddBoxModal({ isOpen, onClose, onAdd, askConfirm, knownLocations = [], availableTags = [] }) {
+export function AddBoxModal({ isOpen, onClose, onAdd, askConfirm, knownLocations = [], availableTags = [], boxes = [], onOpenExisting }) {
     const { t } = useTranslation();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -44,6 +45,13 @@ export function AddBoxModal({ isOpen, onClose, onAdd, askConfirm, knownLocations
     const handleClose = () => {
         clearDraft(draftKey);
         if (typeof onClose === 'function') onClose();
+    };
+
+    // The box being described already exists: open it instead of making a
+    // second one.
+    const handleOpenExisting = (box) => {
+        handleClose();
+        if (typeof onOpenExisting === 'function') onOpenExisting(box);
     };
 
     const handleFileChange = async (e) => {
@@ -115,17 +123,23 @@ export function AddBoxModal({ isOpen, onClose, onAdd, askConfirm, knownLocations
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title={t('box.addTitle')}>
             <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-muted mb-1">{t('common.name')}</label>
-                    <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="input"
-                        placeholder={t('box.namePlaceholder')}
-                    />
-                </div>
+                <NameInputWithMatches
+                    label={t('common.name')}
+                    value={name}
+                    onChange={setName}
+                    placeholder={t('box.namePlaceholder')}
+                    candidates={boxes}
+                    heading={(count) => t('box.existingMatches', { count })}
+                    renderLabel={(box) => (
+                        <span className="block text-sm font-medium text-content line-clamp-2 break-words">
+                            {box.name}
+                            {box.location && (
+                                <span className="font-normal text-muted"> / {box.location}</span>
+                            )}
+                        </span>
+                    )}
+                    onPick={handleOpenExisting}
+                />
 
                 <LocationInput
                     value={location}
