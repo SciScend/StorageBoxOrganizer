@@ -16,6 +16,7 @@ const MAX_MATCHES = 5;
  * submits unless the arrows have reached a row first. Not an autocomplete
  * either, which is why the list is headed by `heading` ("you already have")
  * and a pick opens the existing entry instead of filling in the field.
+ * `heading` is a function of the number of matches, for the plural.
  *
  * Fuzzy on the name only, so a typo still finds the duplicate;
  * `ignoreLocation` because a long name is as likely to match in the middle as
@@ -138,14 +139,14 @@ export function NameInputWithMatches({
                     ref={listRef}
                     id={`${id}-list`}
                     role="listbox"
-                    aria-label={heading}
+                    aria-label={heading(matches.length)}
                     className="box-picker__list"
                     // Keep focus where it is: a tap on a row must not blur the
                     // field (and close the list) before the click lands.
                     onPointerDown={(e) => e.preventDefault()}
                 >
                     <div aria-hidden="true" className="px-2 pt-1.5 pb-1 text-xs font-semibold uppercase tracking-wider text-muted">
-                        {heading}
+                        {heading(matches.length)}
                     </div>
                     {matches.map((entry, index) => {
                         const thumb = refsToThumbs(getImageRefs(entry))[0];

@@ -2138,6 +2138,7 @@ function App() {
         availableItems={allItems}
         availableTags={tagSuggestions}
         onSelectExisting={handleSelectExistingItem}
+        onOpenExisting={handleEditItem}
         askConfirm={askConfirm}
       />
 
