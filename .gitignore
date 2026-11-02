@@ -37,3 +37,5 @@ repomix-output.xml
 repomix-output.*
 
 .github_token
+
+test-artifacts/

@@ -167,19 +167,23 @@ export function FullscreenImageModal({ isOpen, onClose, imageRefs = [], itemName
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, currentId]);
 
-    // Keyboard navigation
+    // Keyboard navigation. Captured on window and Escape stopped there: opened
+    // from an edit modal, the modal's own Escape listener on document used to
+    // run first and close the modal, unmounting this viewer before its handler
+    // ran, so the modal kept a stale viewer index and the next opening mounted
+    // the viewer hidden behind it, where tapping a photo seemed to do nothing.
     useEffect(() => {
         if (!isOpen) return;
         const handleKey = (e) => {
-            if (e.key === 'Escape') { if (isZoomed) resetZoom(); else onClose(); }
+            if (e.key === 'Escape') { e.stopPropagation(); if (isZoomed) resetZoom(); else onClose(); }
             else if (e.key === 'ArrowLeft') goToPrevious();
             else if (e.key === 'ArrowRight') goToNext();
             else if (e.key === '+' || e.key === '=') applyZoom(zoom.scale + 0.5, zoom.x, zoom.y);
             else if (e.key === '-') applyZoom(zoom.scale - 0.5, zoom.x, zoom.y);
             else if (e.key === '0') resetZoom();
         };
-        window.addEventListener('keydown', handleKey);
-        return () => window.removeEventListener('keydown', handleKey);
+        window.addEventListener('keydown', handleKey, true);
+        return () => window.removeEventListener('keydown', handleKey, true);
     }, [isOpen, onClose, goToPrevious, goToNext, applyZoom, resetZoom, isZoomed, zoom]);
 
     const distanceBetween = (touches) => {
