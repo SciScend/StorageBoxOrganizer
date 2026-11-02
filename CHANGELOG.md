@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.22.1](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.22.0...v1.22.1) (2026-11-02)
+
+
+### Bug Fixes
+
+* photo viewer Escape no longer closes the edit modal; landing Features match v1.22.0 ([#82](https://github.com/SciScend/StorageBoxOrganizer/issues/82)) ([dd379e0](https://github.com/SciScend/StorageBoxOrganizer/commit/dd379e0c779a300e36f382cedc0019552df46dea))
+
 ## [1.22.0](https://github.com/SciScend/StorageBoxOrganizer/compare/v1.21.2...v1.22.0) (2026-10-18)
 
 
